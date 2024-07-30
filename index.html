@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Взаимодействие с DOM</title>
+</head>
+<body>
+<h2>Выберите пиццу</h2>
+<form class="pizza-set">
+    <fieldset>
+        <input type="checkbox" data-price="20"/> Margaerita
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="20"/> Peperoni
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="23"/> Quatro Formaggio
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="18"/> Proshutto and Fungi
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="15"/> Tomato pasta and cheese
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="20"/> Bacon and Mashrooms
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="23"/> Vegetarian
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="17"/> Bluecheese
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="21"/> Fresh Sea
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" data-price="19"/> Village staff
+    </fieldset>
+</form>
+
+<button type="button" onclick="getOrderPrice()">Узнать стоимость закзаа</button>
+
+<dl id="total"></dl>
+
+<script>
+    function observer() {
+        const inputs = document.querySelectorAll('fieldset');
+        const config = { attributes: true };
+        let totalPrice = 0;
+
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                totalPrice += Number(mutation.target.querySelector('input').dataset.price);
+                innerTotalPrice(totalPrice);
+            });
+        });
+
+        inputs.forEach((item) => {
+            item.addEventListener('change', (event)=> addBgColor(event, item));
+            observer.observe(item, config)
+        });
+    }
+
+    function addBgColor(event, item) {
+        event.preventDefault();
+
+        item.style.backgroundColor = `${item.querySelector('input').checked}` ? 'green' : 'white';
+    }
+
+    function innerTotalPrice (price) {
+        const total = document.getElementById('total');
+
+        total.innerHTML = `<dt>Стоимость заказанных позиций:</dt> <dd>${price + ' руб'}</dd>`;
+    }
+
+    observer();
+</script>
+</body>
+</html>
